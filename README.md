@@ -162,6 +162,25 @@ await use_mcp_tool("home-connect", "start_program", {
 - Check your internet connection
 - Ensure the appliances are in remote control mode
 
+### Remote Start Issues (400 Error)
+**Known Limitation**: Some Bosch/Siemens appliances require the first program start after power-on to be done manually at the device for security reasons.
+
+**Symptoms:**
+- API returns 400 error when trying to start a program
+- All status checks show the device is ready (RemoteControlActive: true, PowerState: On)
+- Manual start at the device works fine
+
+**Workaround:**
+1. Start the program manually at the device once
+2. After manual start, the API can monitor progress, stop programs, and change settings
+3. Subsequent remote starts may work (device-dependent)
+
+**Affected Devices:**
+- Confirmed on Bosch Dishwashers (SMV series)
+- May affect other appliance types
+
+This is a security feature by Bosch/Siemens and not a bug in the MCP server.
+
 ## License
 
 MIT
