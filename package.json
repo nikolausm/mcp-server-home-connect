@@ -1,0 +1,36 @@
+{
+  "name": "@nikolausm/mcp-server-home-connect",
+  "version": "0.1.0",
+  "description": "MCP Server for Bosch Home Connect API integration",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsx src/index.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "home-connect",
+    "bosch",
+    "siemens",
+    "smart-home"
+  ],
+  "author": "nikolausm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikolausm/mcp-server-home-connect.git"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.0"
+  }
+}
