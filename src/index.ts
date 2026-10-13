@@ -3,7 +3,9 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
-  Tool
+  Tool,
+  type CallToolRequest,
+  type CallToolResult
 } from '@modelcontextprotocol/sdk/types.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
@@ -201,7 +203,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 // Handle tool calls
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler<typeof CallToolRequestSchema>(CallToolRequestSchema, async (request: CallToolRequest): Promise<CallToolResult> => {
   const { name, arguments: args } = request.params;
 
   try {
