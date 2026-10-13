@@ -17,6 +17,18 @@ This MCP (Model Context Protocol) server provides integration with the Bosch Hom
 2. Registered application with Home Connect API
 3. Node.js 18+ installed
 
+## Development checks
+
+Run `npm test` to build and exercise MCP initialization, all eight tool contracts,
+tool dispatch and error propagation. The tests replace the HTTP client adapter;
+they require no Home Connect credentials and never contact appliances or the API.
+Run `npm audit` to inspect the resolved dependency tree.
+
+The server uses stdio transport. The SDK advisory
+[GHSA-w48q-cv73-mx4w](https://github.com/advisories/GHSA-w48q-cv73-mx4w)
+affects HTTP-based transports, not this server's stdio transport. The SDK update
+removes the affected dependency version without changing the eight public tools.
+
 ## Setup
 
 ### 1. Register for Home Connect API
