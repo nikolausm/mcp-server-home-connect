@@ -45,11 +45,15 @@ async function refreshAccessToken() {
   }
   
   try {
-    const response = await axios.post('https://api.home-connect.com/security/oauth/token', {
+    const form = new URLSearchParams({
       grant_type: 'refresh_token',
-      refresh_token: refreshToken,
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET
+      refresh_token: refreshToken
+    });
+    if (CLIENT_ID) form.set('client_id', CLIENT_ID);
+    if (CLIENT_SECRET) form.set('client_secret', CLIENT_SECRET);
+
+    const response = await axios.post('https://api.home-connect.com/security/oauth/token', form.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
     
     accessToken = response.data.access_token;
