@@ -7,16 +7,17 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 const root = fileURLToPath(new URL('../', import.meta.url));
 const fixture = fileURLToPath(new URL('./mock-home-connect.mjs', import.meta.url));
 
-async function withServer(run) {
+async function withServer(run, mockFixture = fixture, env = {}) {
   const client = new Client({ name: 'home-connect-test', version: '1.0.0' });
   const transport = new StdioClientTransport({
     command: process.execPath,
-    args: ['--import', fixture, 'build/index.js'],
+    args: ['--import', mockFixture, 'build/index.js'],
     cwd: root,
     env: {
       PATH: process.env.PATH,
       HOME_CONNECT_CLIENT_ID: 'synthetic-client',
       HOME_CONNECT_ACCESS_TOKEN: 'synthetic-access-token',
+      ...env,
     },
     stderr: 'pipe',
   });
@@ -42,6 +43,24 @@ test('stdio initializes and preserves all eight tool contracts', { timeout: 1000
       start_program: ['haId', 'programKey'], update_setting: ['haId', 'settingKey', 'value'],
     };
     for (const tool of tools) assert.deepEqual(tool.inputSchema.required ?? [], required[tool.name]);
+  });
+});
+
+test('refresh uses encoded form data and rotates tokens without replaying requests', { timeout: 10000 }, async () => {
+  const oauthFixture = fileURLToPath(new URL('./mock-oauth.mjs', import.meta.url));
+  await withServer(async client => {
+    for (let cycle = 1; cycle <= 2; cycle++) {
+      await assert.rejects(
+        client.callTool({ name: 'get_appliances', arguments: {} }),
+        /Token refreshed, please retry the request/,
+      );
+      const result = await client.callTool({ name: 'get_appliances', arguments: {} });
+      assert.deepEqual(JSON.parse(result.content[0].text), { cycle });
+    }
+  }, oauthFixture, {
+    HOME_CONNECT_CLIENT_ID: 'synthetic client+id',
+    HOME_CONNECT_CLIENT_SECRET: 'synthetic+secret&value',
+    HOME_CONNECT_REFRESH_TOKEN: 'refresh+token&0',
   });
 });
 
