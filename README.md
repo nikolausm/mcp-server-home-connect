@@ -24,6 +24,9 @@ tool dispatch and error propagation. The tests replace the HTTP client adapter;
 they require no Home Connect credentials and never contact appliances or the API.
 Run `npm audit` to inspect the resolved dependency tree.
 
+GitHub CI runs these offline tests on Node.js 22 and 24 and checks the lockfile
+for moderate or higher audit findings. No Home Connect secrets are required.
+
 The SDK update requires Node.js 22 or newer for this project. Users on older
 Node.js versions must upgrade their runtime before installing it.
 
